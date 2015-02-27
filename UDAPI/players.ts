@@ -11,6 +11,8 @@ module UDAPI {
 
     export interface Player extends Actor {
         hitPoints?: number; // null if player cannot see HP (dark, missing skill etc)
+        // TODO: Do zombies see injuries? What does an injured and infected survivor look like?
+        injured: boolean; // If player HP is marked in red
         infected: boolean;
     }
 

@@ -11,8 +11,10 @@
         AnonymousZombie,
         Barricades,
         Generator,
-        Radio,
+        RadioMast,
+        RadioTransmission,
         Decoration,
+        Building,
         You
     }
     export enum Contact {
