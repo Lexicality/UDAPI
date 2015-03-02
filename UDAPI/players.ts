@@ -50,4 +50,18 @@ module UDAPI {
         inventory: Item[];
         safeHouse?: Directions; // Null if no safehouse set
     }
+
+    export module Internal {
+        /*
+         * Note to self re parsing skills:
+         * Every skill has its own <ul> tag. This includes subskills
+         * I'm counting this as a bug, since they show up even when the skills themselves aren't there.
+         * The best way to parse this in a sustainable way that I can think of is via jQuery:
+         * thing.children('ul').children('li')
+         * Thing can be either td.slam[rowspan="10"] or a skill with subskills.
+         * Calling children twice both with selectors ensures that no matter how much other crap
+         *  is in the dom (and how many uls are involved), you end up with nothing but the lis
+         *  that contain skills that are inside `thing`. Ideally I'd prefer to avoid jQuery but :/  
+         */
+    }
 }
