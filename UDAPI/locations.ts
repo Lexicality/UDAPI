@@ -152,7 +152,11 @@ module UDAPI {
 
 	// Mutates map in place.
 	function inferCenterCoordinates(map: MiniMap) {
-		// TODO: Work
+		// This assumes that any missing map entries are walls
+		map.current.coords = {
+			x: (map.E || map.W).coords.x,
+			y: (map.N || map.S).coords.y
+		};
 	}
 
 	export function ParseMiniMap(page: UDPage): MiniMap {
