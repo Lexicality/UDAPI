@@ -22,13 +22,12 @@
         // TODO: Colours!
     }
 
-    // Uncomment when resharper 9.1 happens
-    // export type UDID = number;
+    export type UDID = number;
 
     export interface Actor {
         state: PlayerState;
         name: string;
-        ID: number;//UDID;
+        ID: UDID;
         special: SpecialActor;
 
         profileURL(): string;

@@ -4,9 +4,7 @@ module UDAPI {
     export interface ItemAction {
         isTargeted: boolean;
         targetWord?: string; // on, to etc
-        // Uncomment when resharper 9.1 happens
-        //action: Action | TargetedAction;
-        action?: Action;
+        action: Action | TargetedAction;
         targetedAction?: TargetedAction;
     }
 
