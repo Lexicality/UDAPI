@@ -85,6 +85,9 @@
 	export var inside: Directions;  // The same block as the player, but inside the building they are outside
 	export var outside: Directions; // The same block as the player, but outside the building they are inside
 
+	// For the parser
+	export type UDPage = JQuery;
+
 	/*
 	 * ######################
 	 *    STILL LEFT TO DO

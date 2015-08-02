@@ -116,7 +116,8 @@ module UDAPI {
 	}
 
 	export interface MiniMap {
-		Current: MapNode;
+		suburb: string;
+		current: MapNode;
 		// Directions can be null if at map edges
 		NW?: MapNode;
 		N?: MapNode;
@@ -126,5 +127,71 @@ module UDAPI {
 		S?: MapNode;
 		SW?: MapNode;
 		W?: MapNode;
+	}
+
+	function parseMapNode(node: JQuery): MapNode {
+		// Try to find the coords
+		var coords: Coordinates = null;
+		var rawCoords = node.find('input[name="v"]').val();
+		if (rawCoords) {
+			let tmp = rawCoords.split('-');
+			coords = {
+				x: tmp[0],
+				y: tmp[1]
+			};
+		}
+		return {
+			name: node.find('input[type="submit"]').val(),
+			type: NodeType.Unknown,
+			humans: null,
+			coords: coords,
+			more: false,
+			zombies: 0
+		}
+	}
+
+	// Mutates map in place.
+	function inferCenterCoordinates(map: MiniMap) {
+		// TODO: Work
+	}
+
+	export function ParseMiniMap(page: UDPage): MiniMap {
+		// .cp is left menu, first table in it is the minimap.
+		var map = page.find('td.cp > table:first-child');
+
+		// TODO: How the hell do you detect wall cases? Map coords are from 0 to 99
+		// Dumb renderer for now - pretend there are no walls. This will obviously cause hilarious issues.
+		var shittyMapGrid = [[], [], []];
+		var rows = map.find("tr");
+		// First row is suburb name
+		var suburb = rows.eq(0).find('td').text();
+		// Handle actual map
+		var r = [
+			rows.eq(1).find('td'),
+			rows.eq(2).find('td'),
+			rows.eq(3).find('td')
+		];
+		for (let i = 0; i < 3; i++) {
+			for (let j = 0; j < 3; j++) {
+				shittyMapGrid[i][j] = parseMapNode(r[i].eq(j));
+			}
+		}
+
+		var miniMap: MiniMap = {
+			suburb: suburb,
+			NE: shittyMapGrid[0][0],
+			N: shittyMapGrid[0][1],
+			NW: shittyMapGrid[0][2],
+			E: shittyMapGrid[1][0],
+			current: shittyMapGrid[1][1],
+			W: shittyMapGrid[1][2],
+			SE: shittyMapGrid[2][0],
+			S: shittyMapGrid[2][1],
+			SW: shittyMapGrid[2][2]
+		};
+
+		inferCenterCoordinates(miniMap);
+
+		return miniMap;
 	}
 }
