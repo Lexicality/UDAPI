@@ -25,4 +25,4 @@ module UDAPI {
         encumberence: number; // 0-100
         dropAction?: DropAction; // Null if no inventory
     }
-} 
+}

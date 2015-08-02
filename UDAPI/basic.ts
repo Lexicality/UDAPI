@@ -89,7 +89,7 @@
      * ######################
      *    STILL LEFT TO DO
      * ######################
-     * 
+     *
      * - History lines
      * - Zombie instincts
      * - Buy skills page data
@@ -100,6 +100,6 @@
      * - Holiday items. How many of them are visible on the exterior? Is this part of the building description? Do we need to parse this? Christmas lights in minimap.
      * - Minimap square types
      * - Clothes?
-     * 
-     */ 
+     *
+     */
 }
