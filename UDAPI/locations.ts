@@ -141,7 +141,7 @@ module UDAPI {
 			};
 		}
 		return {
-			name: node.find('input[type="submit"]').val(),
+			name: node.find('input[type="submit"]').val().replace("\n", " "),
 			type: NodeType.Unknown,
 			humans: null,
 			coords: coords,
