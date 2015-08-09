@@ -70,6 +70,7 @@
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptOutDir>C:\Users\Lex\Projects\UDAPI\UDAPI\bin</TypeScriptOutDir>
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    <TypeScriptOutFile>bin\built.js</TypeScriptOutFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
