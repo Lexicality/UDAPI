@@ -190,6 +190,8 @@ module UDAPI {
 
 		}
 
+		const xZombies = /(\d+)\s+zombies/;
+
 		export class MapNode implements UDAPI.MapNode {
 			public name: string;
 			public type: NodeType = NodeType.Unknown;
@@ -215,6 +217,22 @@ module UDAPI {
 				}
 				this.coords = coords;
 				this.name = node.find('input[type="submit"]').val().replace("\n", " ");
+				this.parsePlayers(node);
+			}
+
+			private parsePlayers(node: JQuery) {
+				var humans = node.find("a");
+				if (humans.length) {
+					this.humans = _.map(humans, (human) => Actor.FromPlayerLink($(human)));
+				}
+				this.more = node.find('.f').length !== 0;
+				var zombies = node.find('.fz').text();
+				if (zombies) {
+					let nZombies = zombies.match(xZombies);
+					if (nZombies && nZombies[1]) {
+						this.zombies = parseInt(nZombies[1], 10);
+					}
+				}
 			}
 		}
 	}

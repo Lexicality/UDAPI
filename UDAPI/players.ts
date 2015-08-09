@@ -91,6 +91,8 @@ module UDAPI {
 				if (contactCheck) {
 					ret.contact = Contact[contactCheck[1]];
 				}
+				// Potentially useful not but not really doable with this system:
+				// Class detector. f1 = military, f2 = scientist, f3 = civilian.
 
 				return ret;
 			}
