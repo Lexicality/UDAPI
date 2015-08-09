@@ -183,15 +183,15 @@ module UDAPI {
 
 		var miniMap: MiniMap = {
 			suburb: suburb,
-			NE: shittyMapGrid[0][0],
+			NE: shittyMapGrid[0][2],
 			N: shittyMapGrid[0][1],
-			NW: shittyMapGrid[0][2],
-			E: shittyMapGrid[1][0],
+			NW: shittyMapGrid[0][0],
+			E: shittyMapGrid[1][2],
 			current: shittyMapGrid[1][1],
-			W: shittyMapGrid[1][2],
-			SE: shittyMapGrid[2][0],
+			W: shittyMapGrid[1][0],
+			SE: shittyMapGrid[2][2],
 			S: shittyMapGrid[2][1],
-			SW: shittyMapGrid[2][2]
+			SW: shittyMapGrid[2][0]
 		};
 
 		inferCenterCoordinates(miniMap);
