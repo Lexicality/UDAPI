@@ -129,73 +129,93 @@ module UDAPI {
 		W?: MapNode;
 	}
 
-	function parseMapNode(node: JQuery): MapNode {
-		// Try to find the coords
-		var coords: Coordinates = null;
-		var rawCoords = node.find('input[name="v"]').val();
-		if (rawCoords) {
-			let tmp = rawCoords.split('-');
-			coords = {
-				x: tmp[0],
-				y: tmp[1]
-			};
+	export module Internal {
+		export class MiniMap implements UDAPI.MiniMap {
+			public suburb: string;
+			public current: MapNode;
+			public NW: MapNode = null;
+			public N: MapNode = null;
+			public NE: MapNode = null;
+			public E: MapNode = null;
+			public SE: MapNode = null;
+			public S: MapNode = null;
+			public SW: MapNode = null;
+			public W: MapNode = null;
+
+			public static ParseFromPage(page: UDPage): MiniMap {
+				// .cp is left menu, first table in it is the minimap.
+				var map = page.find('td.cp > table:first-child');
+				return new MiniMap(map);
+			}
+
+			constructor(map: JQuery) {
+				// TODO: How the hell do you detect wall cases? Map coords are from 0 to 99
+				// Dumb renderer for now - pretend there are no walls. This will obviously cause hilarious issues.
+				var shittyMapGrid = [[], [], []];
+				var rows = map.find("tr");
+				// First row is suburb name
+				this.suburb = rows.eq(0).find('td').text();
+				// Handle actual map
+				var r = [
+					rows.eq(1).find('td'),
+					rows.eq(2).find('td'),
+					rows.eq(3).find('td')
+				];
+				for (let i = 0; i < 3; i++) {
+					for (let j = 0; j < 3; j++) {
+						shittyMapGrid[i][j] = new MapNode(r[i].eq(j));
+					}
+				}
+
+				this.NE = shittyMapGrid[0][2];
+				this.N = shittyMapGrid[0][1];
+				this.NW = shittyMapGrid[0][0];
+				this.E = shittyMapGrid[1][2];
+				this.current = shittyMapGrid[1][1];
+				this.W = shittyMapGrid[1][0];
+				this.SE = shittyMapGrid[2][2];
+				this.S = shittyMapGrid[2][1];
+				this.SW = shittyMapGrid[2][0];
+
+				this.inferCenterCoordinates();
+				
+			}
+
+			private inferCenterCoordinates() {
+				this.current.coords = {
+					x: (this.E || this.W).coords.x,
+					y: (this.N || this.S).coords.y
+				};
+			}
+
 		}
-		return {
-			name: node.find('input[type="submit"]').val().replace("\n", " "),
-			type: NodeType.Unknown,
-			humans: null,
-			coords: coords,
-			more: false,
-			zombies: 0
-		}
-	}
 
-	// Mutates map in place.
-	function inferCenterCoordinates(map: MiniMap) {
-		// This assumes that any missing map entries are walls
-		map.current.coords = {
-			x: (map.E || map.W).coords.x,
-			y: (map.N || map.S).coords.y
-		};
-	}
+		export class MapNode implements UDAPI.MapNode {
+			public name: string;
+			public type: NodeType = NodeType.Unknown;
+			public coords: Coordinates;
+			public humans: Actor[] = null;
+			public more: boolean = false;
+			public zombies: number = 0;
 
-	export function ParseMiniMap(page: UDPage): MiniMap {
-		// .cp is left menu, first table in it is the minimap.
-		var map = page.find('td.cp > table:first-child');
+			private node: JQuery;
 
-		// TODO: How the hell do you detect wall cases? Map coords are from 0 to 99
-		// Dumb renderer for now - pretend there are no walls. This will obviously cause hilarious issues.
-		var shittyMapGrid = [[], [], []];
-		var rows = map.find("tr");
-		// First row is suburb name
-		var suburb = rows.eq(0).find('td').text();
-		// Handle actual map
-		var r = [
-			rows.eq(1).find('td'),
-			rows.eq(2).find('td'),
-			rows.eq(3).find('td')
-		];
-		for (let i = 0; i < 3; i++) {
-			for (let j = 0; j < 3; j++) {
-				shittyMapGrid[i][j] = parseMapNode(r[i].eq(j));
+			constructor(node: JQuery) {
+				// Save the node for later
+				this.node = node;
+				// Try to find the coords
+				var coords: Coordinates = null;
+				var rawCoords = node.find('input[name="v"]').val();
+				if (rawCoords) {
+					let tmp = rawCoords.split('-');
+					coords = {
+						x: tmp[0],
+						y: tmp[1]
+					};
+				}
+				this.coords = coords;
+				this.name = node.find('input[type="submit"]').val().replace("\n", " ");
 			}
 		}
-
-		var miniMap: MiniMap = {
-			suburb: suburb,
-			NE: shittyMapGrid[0][2],
-			N: shittyMapGrid[0][1],
-			NW: shittyMapGrid[0][0],
-			E: shittyMapGrid[1][2],
-			current: shittyMapGrid[1][1],
-			W: shittyMapGrid[1][0],
-			SE: shittyMapGrid[2][2],
-			S: shittyMapGrid[2][1],
-			SW: shittyMapGrid[2][0]
-		};
-
-		inferCenterCoordinates(miniMap);
-
-		return miniMap;
 	}
 }
