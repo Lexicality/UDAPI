@@ -216,7 +216,7 @@ module UDAPI {
 					};
 				}
 				this.coords = coords;
-				this.name = node.find('input[type="submit"]').val().replace("\n", " ");
+				this.name = node.find('input[type="submit"]').val().replace(/\n/g, " ");
 				this.parsePlayers(node);
 			}
 
