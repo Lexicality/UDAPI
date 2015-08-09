@@ -29,6 +29,7 @@
     <TypeScriptCompile Include="violence.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bootstrap.js" />
     <Content Include="packages.config" />
     <Content Include="Scripts\q.js" />
     <Content Include="Scripts\q.min.js" />
