@@ -19,7 +19,15 @@
 	}
 	export enum Contact {
 		No = 0,
-		// TODO: Colours!
+		Grey,
+		Red,
+		Orange,
+		Yellow,
+		Green,
+		Blue,
+		Purple,
+		Black,
+		White
 	}
 
 	export type UDID = number;
@@ -29,6 +37,7 @@
 		name: string;
 		ID: UDID;
 		special: SpecialActor;
+		contact: Contact;
 
 		profileURL(): string;
 	}
