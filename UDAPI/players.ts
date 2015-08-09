@@ -51,7 +51,57 @@ module UDAPI {
 		safeHouse?: Directions; // Null if no safehouse set
 	}
 
+
 	export module Internal {
+		const profileIDMatcher = /profile.cgi\?id=(\d+)/;
+		const contactChecker = /con(\d)/;
+
+		export class Actor implements UDAPI.Actor {
+			public state: PlayerState = PlayerState.Unknown;
+			public special: SpecialActor = SpecialActor.None;
+			public contact: Contact = Contact.No;
+
+			public name: string;
+			public ID: UDID;
+
+			public profileURL(): string {
+				return `/profile.cgi?id=${this.ID}`;
+			}
+
+			public static FromPlayerLink(link: JQuery): Actor {
+				let name = link.text();
+				// Extract the ID from the profile URL
+				let matchData = link.attr('href').match(profileIDMatcher);
+				if (!matchData) {
+					throw new Error("Passed JQuery element is not a link to a player!");
+				}
+				let ID = parseInt(matchData[1], 10);
+				if (!ID) {
+					throw new Error("Passed JQuery element is not a valid link to a player!");
+				}
+				// Create our actor
+				var ret = new Actor(name, ID);
+				// Basic use case check for anonymous zombie
+				if (name === "A zombie") {
+					ret.special = SpecialActor.AnonymousZombie;
+					ret.state = PlayerState.Undead;
+				}
+				// Check for contact classes
+				let contactCheck = link.get(0).className.match(contactChecker);
+				if (contactCheck) {
+					ret.contact = Contact[contactCheck[1]];
+				}
+
+				return ret;
+			}
+
+			constructor(name: string, ID: UDID) {
+				this.name = name;
+				this.ID = ID;
+			}
+
+		}
+	
 		/*
 		 * Note to self re parsing skills:
 		 * Every skill has its own <ul> tag. This includes subskills
