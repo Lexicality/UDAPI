@@ -205,6 +205,7 @@ module UDAPI {
 			constructor(node: JQuery) {
 				// Save the node for later
 				this.node = node;
+
 				// Try to find the coords
 				var coords: Coordinates = null;
 				var rawCoords = node.find('input[name="v"]').val();
@@ -217,6 +218,10 @@ module UDAPI {
 				}
 				this.coords = coords;
 				this.name = node.find('input[type="submit"]').val().replace(/\n/g, " ");
+				if (this.name.indexOf('[NT]') !== -1) {
+					// TODO: Set the building type to NecroTech
+					this.name = this.name.replace(' [NT]', '');
+				}
 				this.parsePlayers(node);
 			}
 
